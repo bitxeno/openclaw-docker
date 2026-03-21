@@ -42,12 +42,10 @@ RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && \
     apt-get install -y nodejs
 
 # Install Bun
-RUN curl -fsSL https://bun.sh/install | bash
-ENV PATH="${PATH}:/root/.bun/bin"
+RUN BUN_INSTALL=/usr/local/bin curl -fsSL https://bun.sh/install | bash
 
 # Install uv (Python package manager)
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh
-ENV PATH="${PATH}:/root/.cargo/bin"
+RUN XDG_BIN_HOME=/usr/local/bin curl -LsSf https://astral.sh/uv/install.sh | sh
 
 # Install Go (multi-arch)
 RUN if [ "$(uname -m)" = "aarch64" ]; then \

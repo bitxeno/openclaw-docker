@@ -6,6 +6,8 @@ services:
       - "${OPENCLAW_GATEWAY_PORT}:18789"
       - "${OPENCLAW_BRIDGE_PORT}:18790"
       - "${OPENCODE_PORT}:4096"
+    env_file:
+      - .env
     environment:
       TZ: Asia/Shanghai
     volumes:
