@@ -46,7 +46,8 @@ RUN curl -fsSL https://bun.sh/install | bash
 ENV PATH="${PATH}:/root/.bun/bin"
 
 # Install uv (Python package manager)
-RUN XDG_BIN_HOME=/usr/local/bin curl -LsSf https://astral.sh/uv/install.sh | sh
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+ENV PATH="${PATH}:/root/.local/bin"
 
 # Install Go (multi-arch)
 RUN if [ "$(uname -m)" = "aarch64" ]; then \
