@@ -11,7 +11,8 @@ services:
     environment:
       TZ: Asia/Shanghai
     volumes:
-      - ./workspace:/home/openclaw/workspace
+      - ./.openclaw:/root/.openclaw
+      - ./.config:/root/.config
     restart: unless-stopped
     networks:
       - openclaw-network
