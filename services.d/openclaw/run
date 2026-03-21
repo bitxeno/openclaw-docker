@@ -4,7 +4,19 @@ set -e
 
 echo "Starting openclaw..."
 
-openclaw gateway run \
+local config_file="~/.openclaw/openclaw.json"
+if [ ! -f "$config_file" ]; then
+    openclaw config set gateway.mode "${OPENCLAW_GATEWAY_MODE:-local}"
+    openclaw config set gateway.controlUi.allowInsecureAuth "${OPENCLAW_GATEWAY_ALLOW_INSECURE_AUTH:-false}"
+    openclaw config set gateway.controlUi.dangerouslyDisableDeviceAuth "${OPENCLAW_GATEWAY_DANGEROUSLY_DISABLE_DEVICE_AUTH:-false}"
+    orig="${OPENCLAW_GATEWAY_ALLOWED_ORIGINS:-http://localhost:18789}"
+    escaped=$(printf '%s' "$orig" | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g')
+    replaced=$(printf '%s' "$escaped" | sed -e 's/,/\",\"/g')
+    json="[\"$replaced\"]"
+    openclaw config set gateway.controlUi.allowedOrigins "$json"
+fi
+
+openclaw gateway \
         --bind "${OPENCLAW_GATEWAY_BIND:-0.0.0.0}" \
         --port "${OPENCLAW_GATEWAY_PORT:-18789}" \
         --token "${OPENCLAW_GATEWAY_TOKEN:-123456}" \
