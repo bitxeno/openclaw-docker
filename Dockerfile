@@ -42,13 +42,11 @@ RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && \
     apt-get install -y nodejs
 
 # Install Bun
-RUN curl -fsSL https://bun.sh/install | bash && \
-    chmod -R 777 /root/.bun/bin
+RUN curl -fsSL https://bun.sh/install | bash
 ENV PATH="${PATH}:/root/.bun/bin"
 
 # Install uv (Python package manager)
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh && \
-    chmod -R 777 /root/.local/bin
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 ENV PATH="${PATH}:/root/.local/bin"
 
 # Install Go (multi-arch)
@@ -65,8 +63,7 @@ RUN if [ "$(uname -m)" = "aarch64" ]; then \
 ENV PATH="${PATH}:/usr/local/go/bin"
 
 # Install Rust
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && \
-    chmod -R 777 /root/.cargo/bin
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 ENV PATH="${PATH}:/root/.cargo/bin"
 
 # Install jj
@@ -78,17 +75,11 @@ RUN ARCH=$(uname -m); \
 ENV PATH="${PATH}:/usr/local/jj"
 
 # Install OpenCode
-RUN curl -fsSL https://opencode.ai/install | bash && \
-    chmod -R 777 /root/.opencode/bin
+RUN curl -fsSL https://opencode.ai/install | bash
 ENV PATH="${PATH}:/root/.opencode/bin"
 
 # Install OpenClaw
 RUN npm install -g openclaw@latest
-
-# ubuntu user setup
-RUN apt-get update && apt-get install -y sudo && \
-    echo "ubuntu ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/ubuntu && \
-    chmod 0440 /etc/sudoers.d/ubuntu
 
 # Clean up apt cache to reduce image size
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -111,16 +102,8 @@ COPY services.d /etc/services.d
 RUN chmod +x /etc/services.d/*/run
 
 # Copy opencode config to workspace
-RUN mkdir -p /home/ubuntu/.config/opencode && \
-    chown -R ubuntu:ubuntu /home/ubuntu/.config/opencode
-COPY opencode.json /home/ubuntu/.config/opencode/
-RUN chown ubuntu:ubuntu /home/ubuntu/.config/opencode/opencode.json
-
-# Set working directory
-WORKDIR /home/ubuntu
-
-# Switch to ubuntu user
-USER ubuntu
+RUN mkdir -p /root/.config/opencode
+COPY opencode.json /root/.config/opencode/
 
 # Set s6-overlay entrypoint
 ENTRYPOINT ["/init"]
