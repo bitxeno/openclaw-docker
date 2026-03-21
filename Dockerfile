@@ -1,4 +1,5 @@
 FROM ubuntu:24.04
+ARG S6_OVERLAY_VERSION=3.2.2.0
 
 # Set environment variables
 ENV DEBIAN_FRONTEND=noninteractive
@@ -6,7 +7,6 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Install base dependencies and tools
 # software-properties-common will lead to lsetxattr security.capability error
 RUN apt-get update && apt-get install -y \
-    s6-overlay \
     curl \
     wget \
     git \
@@ -16,6 +16,16 @@ RUN apt-get update && apt-get install -y \
     zip \
     jq \
     rclone
+
+# Install s6-overlay for process supervision
+ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-noarch.tar.xz /tmp
+RUN tar -C / -Jxpf /tmp/s6-overlay-noarch.tar.xz \
+    && rm /tmp/s6-overlay-noarch.tar.xz
+RUN ARCH=$(uname -m); \
+    cd /tmp && \
+    wget https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-${ARCH}.tar.xz && \
+    tar -C / -Jxpf /tmp/s6-overlay-${ARCH}.tar.xz && \
+    rm /tmp/s6-overlay-${ARCH}.tar.xz
 
 # Install Python 3
 RUN apt-get install -y \
