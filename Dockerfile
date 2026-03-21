@@ -117,12 +117,12 @@ RUN echo "=== Python ===" && python3 --version && \
 # Set proper permissions for workspace
 RUN chown -R openclaw:openclaw /home/openclaw/workspace
 
-# Switch to openclaw user
-USER openclaw
-
 # Copy s6-overlay services scripts
 COPY services.d /etc/services.d
 RUN chmod +x /etc/services.d/*/run
+
+# Switch to openclaw user
+USER openclaw
 
 # Set s6-overlay entrypoint
 ENTRYPOINT ["/init"]
