@@ -1,0 +1,11 @@
+#!/bin/sh
+
+set -e
+
+echo "Starting openclaw..."
+
+openclaw gateway run \
+        --bind "${OPENCLAW_GATEWAY_BIND:-0.0.0.0}" \
+        --port "${OPENCLAW_GATEWAY_PORT:-18789}" \
+        --token "${OPENCLAW_GATEWAY_TOKEN:-123456}" \
+        --verbose
