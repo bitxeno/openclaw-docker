@@ -41,9 +41,16 @@ RUN ln -sf /usr/bin/python3 /usr/bin/python
 RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && \
     apt-get install -y nodejs
 
-# Install Bun
-RUN curl -fsSL https://bun.sh/install | bash
-ENV PATH="${PATH}:/root/.bun/bin"
+# Install Bun (Old CPU need to use baseline version)
+RUN if [ "$(uname -m)" = "x86_64" ]; then \
+      ARCH=x64; \
+    else \
+      ARCH=$(uname -m); \
+    fi && \
+    wget https://github.com/oven-sh/bun/releases/download/bun-v1.3.11/bun-linux-${ARCH}-baseline.zip && \
+    unzip bun-linux-${ARCH}-baseline.zip -d /usr/local/ && \
+    rm bun-linux-${ARCH}-baseline.zip
+ENV PATH="${PATH}:/usr/local/bun-linux-${ARCH}-baseline"
 
 # Install uv (Python package manager)
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
