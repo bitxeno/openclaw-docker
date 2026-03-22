@@ -81,7 +81,8 @@ RUN curl -fsSL https://opencode.ai/install | bash
 ENV PATH="${PATH}:/root/.opencode/bin"
 
 # Install OpenClaw
-RUN npm install -g openclaw@latest
+RUN npm install -g openclaw@latest && \
+    npm install -g mcporter
 
 # Install GitHub CLI
 RUN if [ "$(uname -m)" = "x86_64" ]; then \
