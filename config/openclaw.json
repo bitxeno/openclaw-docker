@@ -1,0 +1,56 @@
+{
+    "meta": {
+        "lastTouchedVersion": "2026.2.14",
+        "lastTouchedAt": "2026-02-14T13:59:00.000Z"
+    },
+    "update": {
+        "checkOnStart": false
+    },
+    "agents": {
+        "defaults": {
+            "model": {
+                "primary": "default/gemini-3-flash-preview"
+            },
+            "imageModel": {
+                "primary": "default/gemini-3-flash-preview"
+            },
+            "workspace": "/root/.openclaw/workspace",
+            "compaction": {
+                "mode": "safeguard"
+            },
+            "sandbox": {
+                "mode": "off"
+            },
+            "elevatedDefault": "full",
+            "maxConcurrent": 4,
+            "subagents": {
+                "maxConcurrent": 8
+            }
+        }
+    },
+    "tools": {
+        "profile": "full",
+        "sessions": {
+            "visibility": "all"
+        },
+        "fs": {
+            "workspaceOnly": true
+        }
+    },
+    "gateway": {
+        "port": 18789,
+        "mode": "local",
+        "bind": "lan",
+        "controlUi": {
+            "allowInsecureAuth": true,
+            "dangerouslyDisableDeviceAuth": false,
+            "allowedOrigins": [
+                "http://localhost"
+            ]
+        },
+        "auth": {
+            "mode": "token",
+            "token": "123456"
+        }
+    }
+}

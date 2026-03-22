@@ -1,3 +1,4 @@
+# Reference: https://github.com/justlovemaki/openclaw-docker-cn-im
 FROM ubuntu:24.04
 ARG S6_OVERLAY_VERSION=3.2.2.0
 ARG GITHUB_CLI_VERSION=2.88.1
@@ -81,8 +82,7 @@ RUN curl -fsSL https://opencode.ai/install | bash
 ENV PATH="${PATH}:/root/.opencode/bin"
 
 # Install OpenClaw
-RUN npm install -g openclaw@latest && \
-    npm install -g mcporter
+RUN npm install -g openclaw@latest
 
 # Install GitHub CLI
 RUN if [ "$(uname -m)" = "x86_64" ]; then \

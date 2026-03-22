@@ -8,6 +8,7 @@ config_file="$HOME/.openclaw/openclaw.json"
 if [ ! -f "$config_file" ]; then
 	echo "openclaw config not found; writing default to ${config_file}"
 	mkdir -p "$(dirname "${config_file}")"
+    cp $HOME/default-config/openclaw.json "${config_file}"
 
     openclaw config set gateway.mode "${OPENCLAW_GATEWAY_MODE:-local}"
     openclaw config set gateway.controlUi.allowInsecureAuth "${OPENCLAW_GATEWAY_ALLOW_INSECURE_AUTH:-false}"
