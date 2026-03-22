@@ -12,7 +12,8 @@ services:
       TZ: Asia/Shanghai
     volumes:
       - ./.openclaw:/root/.openclaw
-      - ./.config:/root/.config
+      - ./.opencode/config:/root/.config/opencode
+      - ./.opencode/data:/root/.local/share/opencode
     restart: unless-stopped
     networks:
       - openclaw-network
