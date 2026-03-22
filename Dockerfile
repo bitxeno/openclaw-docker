@@ -1,5 +1,6 @@
 FROM ubuntu:24.04
 ARG S6_OVERLAY_VERSION=3.2.2.0
+ARG GITHUB_CLI_VERSION=2.88.1
 
 # Set environment variables
 ENV DEBIAN_FRONTEND=noninteractive
@@ -17,16 +18,6 @@ RUN apt-get update && apt-get install -y \
     zip \
     jq \
     rclone
-
-# Install Homebrew as non-root user
-USER ubuntu
-RUN NONINTERACTIVE=1 /bin/bash -lc \
-  "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-ENV PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:${PATH}"
-USER root
-
-# Install GitHub CLI
-RUN brew install gh
 
 # Install s6-overlay for process supervision
 ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-noarch.tar.xz /tmp
@@ -85,6 +76,25 @@ ENV PATH="${PATH}:/usr/local/go/bin:/root/go/bin"
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 ENV PATH="${PATH}:/root/.cargo/bin"
 
+# Install OpenCode
+RUN curl -fsSL https://opencode.ai/install | bash
+ENV PATH="${PATH}:/root/.opencode/bin"
+
+# Install OpenClaw
+RUN npm install -g openclaw@latest
+
+# Install GitHub CLI
+RUN if [ "$(uname -m)" = "x86_64" ]; then \
+      ARCH=amd64; \
+    else \
+      ARCH=arm64; \
+    fi && \
+    wget https://github.com/cli/cli/releases/download/v${GITHUB_CLI_VERSION}/gh_${GITHUB_CLI_VERSION}_linux_${ARCH}.tar.gz && \
+    tar -xzf gh_${GITHUB_CLI_VERSION}_linux_${ARCH}.tar.gz && \
+    mv gh_${GITHUB_CLI_VERSION}_linux_${ARCH}/bin/gh /usr/local/bin/ && \
+    rm -rf gh_${GITHUB_CLI_VERSION}_linux_${ARCH} gh_${GITHUB_CLI_VERSION}_linux_${ARCH}.tar.gz
+ENV PATH="${PATH}:/root/.gh/bin"
+
 # Install jj
 RUN ARCH=$(uname -m); \
     mkdir -p /usr/local/jj && \
@@ -92,13 +102,6 @@ RUN ARCH=$(uname -m); \
     tar -C /usr/local/jj -xzf jj-v0.39.0-${ARCH}-unknown-linux-musl.tar.gz && \
     rm jj-v0.39.0-${ARCH}-unknown-linux-musl.tar.gz
 ENV PATH="${PATH}:/usr/local/jj"
-
-# Install OpenCode
-RUN curl -fsSL https://opencode.ai/install | bash
-ENV PATH="${PATH}:/root/.opencode/bin"
-
-# Install OpenClaw
-RUN npm install -g openclaw@latest
 
 # Clean up apt cache to reduce image size
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
