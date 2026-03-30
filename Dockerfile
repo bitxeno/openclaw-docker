@@ -17,8 +17,7 @@ RUN apt-get update && apt-get install -y \
     ca-certificates \
     unzip \
     zip \
-    jq \
-    rclone
+    jq
 
 # Install s6-overlay for process supervision
 ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-noarch.tar.xz /tmp
@@ -72,6 +71,7 @@ RUN if [ "$(uname -m)" = "aarch64" ]; then \
     rm -rf /usr/local/go && tar -C /usr/local -xzf go1.26.1.linux-${GOARCH}.tar.gz && \
     rm go1.26.1.linux-${GOARCH}.tar.gz
 ENV PATH="${PATH}:/usr/local/go/bin:/root/go/bin"
+RUN go install github.com/air-verse/air@latest
 
 # Install Rust
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
@@ -81,9 +81,13 @@ ENV PATH="${PATH}:/root/.cargo/bin"
 RUN curl -fsSL https://opencode.ai/install | bash
 ENV PATH="${PATH}:/root/.opencode/bin"
 
+# Install Codex
+RUN npm install -g @openai/codex
+
 # Install OpenClaw
 RUN npm install -g openclaw@latest && \
-    npm install -g mcporter
+    npm install -g mcporter && \
+    npm install -g codexapp
 
 # Install GitHub CLI
 RUN if [ "$(uname -m)" = "x86_64" ]; then \
@@ -117,8 +121,7 @@ RUN echo "=== Python ===" && python3 --version && \
     echo "=== Go ===" && go version && \
     echo "=== Rust ===" && rustc --version && \
     echo "=== Cargo ===" && cargo --version && \
-    echo "=== OpenCode ===" && opencode --version && \
-    echo "=== Rclone ===" && rclone version
+    echo "=== OpenCode ===" && opencode --version
 
 
 # Copy s6-overlay services scripts

@@ -1,0 +1,7 @@
+#!/command/with-contenv bash
+
+set -e
+
+echo "Starting codexapp..."
+
+codexapp --no-tunnel --no-open --no-password --port "${CODEXAPP_PORT:-5999}"
