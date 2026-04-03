@@ -28,6 +28,7 @@ RUN ARCH=$(uname -m); \
     wget https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-${ARCH}.tar.xz && \
     tar -C / -Jxpf /tmp/s6-overlay-${ARCH}.tar.xz && \
     rm /tmp/s6-overlay-${ARCH}.tar.xz
+ENV PATH="${PATH}:/command"
 
 # Install Python 3
 RUN apt-get install -y \
@@ -82,12 +83,13 @@ RUN curl -fsSL https://opencode.ai/install | bash
 ENV PATH="${PATH}:/root/.opencode/bin"
 
 # Install Codex
-RUN npm install -g @openai/codex
+RUN npm install -g @openai/codex && \
+    npm install -g codexapp
 
 # Install OpenClaw
 RUN npm install -g openclaw@latest && \
     npm install -g mcporter && \
-    npm install -g codexapp
+    npm install -g bb-browser
 
 # Install GitHub CLI
 RUN if [ "$(uname -m)" = "x86_64" ]; then \
