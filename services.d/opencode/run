@@ -12,4 +12,4 @@ if [ ! -f "${CONFIG_PATH}" ]; then
 	cp $HOME/default-config/opencode.json "${CONFIG_PATH}"
 fi
 
-opencode web --port "${OPENCODE_PORT:-4096}" --hostname "${OPENCODE_HOSTNAME:-0.0.0.0}"
+exec opencode web --port "${OPENCODE_PORT:-4096}" --hostname "${OPENCODE_HOSTNAME:-0.0.0.0}"

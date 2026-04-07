@@ -20,7 +20,7 @@ if [ ! -f "$config_file" ]; then
     openclaw config set gateway.controlUi.allowedOrigins "$json"
 fi
 
-openclaw gateway \
+exec openclaw gateway \
         --bind "${OPENCLAW_GATEWAY_BIND:-lan}" \
         --port "${OPENCLAW_GATEWAY_PORT:-18789}" \
         --token "${OPENCLAW_GATEWAY_TOKEN:-123456}" \
